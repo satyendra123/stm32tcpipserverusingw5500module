@@ -1,3 +1,10 @@
+Note- isme kya hai ki hume cubeMX me jakar pahle sys me jakar debug me serial wire krenge uske bad hum check krenge system wake up, aur Timebase source me hum SysTick ko select krenge.
+so aisa karne se controller me pin select hota hai. PA0(SYS_WKUP), PA13(TMS), PA14(TCK), and for the serial wire one pin is selected which is PB3(SWO).
+
+(ii) for the RCC we select HSE-BYPASS Clock Source, LSE- Crystal/Ceramic Resonant, PC14-OSC32-IN(RCC_OSC32_IN), PC14-OSC32-IN(RCC_OSC32_IN) , PH0-OSC-IN(RCC_OSC_IN) , PH1-OSC-OUT(RCC_OSC_OUT)
+
+(iii) go to the connectivity for the selection of uart2. PA2(USART_TX), PA3(USART_RX)
+
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
