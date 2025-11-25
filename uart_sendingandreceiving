@@ -49,3 +49,28 @@ int main(void)
      HAL_Delay(1000);
   }
 }
+
+EX-3 in this i want whatever data will be sent from the docklight the same data my controller will send back to the docklight
+
+#include "main.h"
+
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);
+
+char Message[] = "Write anything on Serial Terminal\r\n";
+
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_USART2_UART_Init();
+  HAL_UART_Transmit(&huart2, (uint8_t *)Message, strlen(Message), 10);
+  while (1)
+  {
+     uint8_t buffer[4];
+     HAL_UART_Receive(&huart2, buffer, sizeof(buffer), HAL_MAX_DELAY);
+     HAL_UART_Transmit(&huart2, buffer, sizeof(buffer), HAL_MAX_DELAY);
+  }
+}
