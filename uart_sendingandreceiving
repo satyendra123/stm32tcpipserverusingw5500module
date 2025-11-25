@@ -21,7 +21,7 @@ int main(void)
   }
 }
 
-EX-2 this code is used for Receiving the data from the docklight directly with the power cable and toggle the led when HI is coming from the docklight
+EX-2 this code is used for Receiving the data from the docklight directly with the power cable and toggle the led when hi is coming from the docklight. so jab ek bar hi bhejunga to led turn on hoga aur jab dusri bar hi bhejunga to led turn off hoga
 #include "main.h"
 
 void SystemClock_Config(void);
