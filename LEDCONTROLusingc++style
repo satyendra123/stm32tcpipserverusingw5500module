@@ -1,0 +1,103 @@
+1) LedController.h
+#ifndef LEDCONTROLLER_H_
+#define LEDCONTROLLER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "stm32f4xx_hal.h"   // <-- REQUIRED (defines GPIO_TypeDef, GPIO_PIN_x)
+#include <stdint.h>          // <-- Fix for uint16_t
+
+void Led_Init(GPIO_TypeDef* ports[], uint16_t pins[], int count);
+void Led_On(int index);
+void Led_Off(int index);
+void Led_KnightRider(int delay);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* LEDCONTROLLER_H_ */
+
+
+2) LedController.cpp
+/*
+ * LedController.cpp
+ *
+ *  Created on: Nov 26, 2025
+ *      Author: HP
+ */
+
+#include "LedController.h"
+#include "main.h"
+
+static GPIO_TypeDef** _ports;
+static uint16_t* _pins;
+static int _count;
+
+extern "C" {
+
+void Led_Init(GPIO_TypeDef* ports[], uint16_t pins[], int count){
+    _ports = ports;
+    _pins = pins;
+    _count = count;
+}
+
+void Led_On(int index){
+    HAL_GPIO_WritePin(_ports[index], _pins[index], GPIO_PIN_SET);
+}
+
+void Led_Off(int index){
+    HAL_GPIO_WritePin(_ports[index], _pins[index], GPIO_PIN_RESET);
+}
+
+void Led_KnightRider(int delay){
+    for(int i=0;i<_count;i++){
+        for(int j=0;j<_count;j++) Led_Off(j);
+        Led_On(i);
+        HAL_Delay(delay);
+    }
+    for(int i=_count-2;i>0;i--){
+        for(int j=0;j<_count;j++) Led_Off(j);
+        Led_On(i);
+        HAL_Delay(delay);
+    }
+}
+
+} // end extern "C"
+
+3) main.c
+
+#include "main.h"
+#include "LedController.h"
+
+UART_HandleTypeDef huart2;
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_USART2_UART_Init(void);
+
+GPIO_TypeDef* ledPorts[] = {
+    GPIOA
+};
+
+uint16_t ledPins[] = {
+		GPIO_PIN_5
+};
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  MX_USART2_UART_Init();
+  Led_Init(ledPorts, ledPins, 1);
+  Led_On(0);
+
+  while (1)
+  {
+	  Led_On(0);
+	  HAL_Delay(500);
+	  Led_Off(0);
+	  HAL_Delay(500);
+  }
+}
