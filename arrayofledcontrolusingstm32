@@ -3,7 +3,6 @@
 /* USER CODE END Includes */
 
 // Define LED pin array
-GPIO_TypeDef* LED_PORT = GPIOA;
 uint16_t LED_PINS[] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3};
 
 /* USER CODE BEGIN PV */
@@ -21,7 +20,7 @@ int main(void)
   {
     // Turn ON LEDs one by one
     for(int i = 0; i < ledCount; i++){
-        HAL_GPIO_WritePin(LED_PORT, LED_PINS[i], GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, LED_PINS[i], GPIO_PIN_SET);
         HAL_Delay(300);
     }
 
@@ -31,6 +30,51 @@ int main(void)
     for(int i = 0; i < ledCount; i++){
         HAL_GPIO_WritePin(LED_PORT, LED_PINS[i], GPIO_PIN_RESET);
         HAL_Delay(300);
+    }
+
+    HAL_Delay(500);
+  }
+}
+
+ex-2 lekin suppose karo ki hume GPIOA se 4 pin chahiye aur GPIOB se bhi 4 pin chahiye to hum loop me kaise GPIOA aur GPIOB likhenge so hum ek GPIO_PORT ke name se array bana lenge
+
+#include "main.h"
+
+// Store PORT and PIN for each LED
+GPIO_TypeDef* LED_PORT[] = {
+    GPIOA, GPIOA, GPIOA, GPIOA,
+    GPIOB, GPIOB, GPIOB, GPIOB
+};
+
+uint16_t LED_PIN[] = {
+    GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3,
+    GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3
+};
+
+int ledCount = 8;
+
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+
+  while (1)
+  {
+    // Turn ON LEDs one by one
+    for(int i = 0; i < ledCount; i++)
+    {
+        HAL_GPIO_WritePin(LED_PORT[i], LED_PIN[i], GPIO_PIN_SET);
+        HAL_Delay(200);
+    }
+
+    HAL_Delay(500);
+
+    // Turn OFF LEDs one by one
+    for(int i = 0; i < ledCount; i++)
+    {
+        HAL_GPIO_WritePin(LED_PORT[i], LED_PIN[i], GPIO_PIN_RESET);
+        HAL_Delay(200);
     }
 
     HAL_Delay(500);
