@@ -71,7 +71,7 @@ static void MX_USART2_UART_Init(void);
     //return len;
 //}
 
-// ITM_SendChar for SWV console Note- ye code hum direcly Syscalls.c me se uthaye hai
+// ITM_SendChar for SWV console Note- ye code hum direcly Syscalls.c me se uthaye hai aur thoda sa changes kar diye hai
 int _write(int file, char *ptr, int len)
 {
     (void) file
