@@ -18,22 +18,45 @@ PA6  - G (with 100ohm register in series)
 9- abcdefg - 1110110 - 0x67
 
 
+EX-1
+#include "main.h"
 
+int main(void)
+{
+    HAL_Init();
+    SystemClock_Config();
+    MX_GPIO_Init();
 
+    // Segment patterns for digits 0–9
+    uint8_t digitPatterns[] = {
+        0x3F, // 0
+        0x06, // 1
+        0x5B, // 2
+        0x4F, // 3
+        0x66, // 4
+        0x6D, // 5
+        0x7D, // 6
+        0x07, // 7
+        0x7F, // 8
+        0x67  // 9
+    };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    while(1)
+    {
+        for(int num = 0; num < 10; num++)
+        {
+            uint8_t pattern = digitPatterns[num];
+            for(int bit = 0; bit < 7; bit++)
+            {
+                if(pattern & (1 << bit))
+                    HAL_GPIO_WritePin(GPIOA, (1 << bit), GPIO_PIN_SET);
+                else
+                    HAL_GPIO_WritePin(GPIOA, (1 << bit), GPIO_PIN_RESET);
+            }
+            HAL_Delay(1000);
+        }
+    }
+}
 
 EX-2 4 digit seven segment display
 
