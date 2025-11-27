@@ -1,0 +1,119 @@
+PA0  - A (with 100ohm register in series)
+PA1  - B (with 100ohm register in series)
+PA2  - C (with 100ohm register in series)
+PA3  - D (with 100ohm register in series)
+PA4  - E (with 100ohm register in series)
+PA5  - F (with 100ohm register in series)
+PA6  - G (with 100ohm register in series)
+
+0- abcdefg - 1111110 - 0x3f
+1- abcdefg - 0110000 -0x06
+2- abcdefg - 1101101 - 0x5b
+3- abcdefg - 1111001 - 0x4f
+4- abcdefg - 0110011 - 0x66
+5- abcdefg - 1011011 - 0x6d
+6- abcdefg - 1011111 - 0x7d
+7- abcdefg - 1110000 - 0x07
+8- abcdefg - 1111111 - 0x7f
+9- abcdefg - 1110110 - 0x67
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+EX-2 4 digit seven segment display
+
+#include "main.h"
+
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+
+uint32_t counter = 0;
+uint8_t temp1, temp2, temp3, temp4;
+
+#define D1_HIGH() HAL_GPIO_WritePin(D1_GPIO_Port, D1_Pin, GPIO_PIN_SET)
+#define D1_LOW() HAL_GPIO_WritePin(D1_GPIO_Port, D1_Pin, GPIO_PIN_RESET)
+#define D2_HIGH() HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_SET)
+#define D2_LOW() HAL_GPIO_WritePin(D2_GPIO_Port, D2_Pin, GPIO_PIN_RESET)
+#define D3_HIGH() HAL_GPIO_WritePin(D3_GPIO_Port, D3_Pin, GPIO_PIN_SET)
+#define D3_LOW() HAL_GPIO_WritePin(D3_GPIO_Port, D3_Pin, GPIO_PIN_RESET)
+#define D4_HIGH() HAL_GPIO_WritePin(D4_GPIO_Port, D4_Pin, GPIO_PIN_SET)
+#define D4_LOW() HAL_GPIO_WritePin(D4_GPIO_Port, D4_Pin, GPIO_PIN_RESET)
+
+uint8_t segmentNumber[10] = {
+        0x3f,  // 0
+        0x06,  // 1
+        0x5b,  // 2
+        0x4f,  // 3
+        0x66,  // 4
+        0x6d,  // 5
+        0x7d,  // 6
+        0x07,  // 7
+        0x7f,  // 8
+        0x67   // 9
+};
+
+void SevenSegment_Update(uint8_t number){
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, ((number>>0)&0x01));
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, ((number>>1)&0x01));
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_2, ((number>>2)&0x01));
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_3, ((number>>3)&0x01));
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, ((number>>4)&0x01));
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, ((number>>5)&0x01));
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, ((number>>6)&0x01));
+}
+
+int main(void)
+{
+  HAL_Init();
+  SystemClock_Config();
+  MX_GPIO_Init();
+  while (1)
+  {
+	  temp1 = counter/1000; //1 - 1st digit
+	  temp2 = ((counter/100)%10); //2 - 2nd digit
+	  temp3 = ((counter/10)%10); //3 - 3rd digit
+	  temp4 = (counter%10); //4 - 4th digit
+
+	  SevenSegment_Update(segmentNumber[temp1]);
+	  D1_LOW();
+	  HAL_Delay(7);
+	  D1_HIGH();
+
+	  SevenSegment_Update(segmentNumber[temp2]);
+	  D2_LOW();
+	  HAL_Delay(7);
+	  D2_HIGH();
+
+	  SevenSegment_Update(segmentNumber[temp3]);
+	  D3_LOW();
+	  HAL_Delay(7);
+	  D3_HIGH();
+
+	  SevenSegment_Update(segmentNumber[temp4]);
+	  D4_LOW();
+	  HAL_Delay(7);
+	  D4_HIGH();
+
+	  counter++;
+
+	  if (counter >= 1000) {
+		counter = 0;
+	}
+  }
+}
+
